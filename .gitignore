@@ -1,0 +1,10 @@
+node_modules
+build
+.env
+coverage
+
+# Prisma
+prisma/migrations
+
+# Cemig file
+src/utils/test-files/cemig-bill.pdf

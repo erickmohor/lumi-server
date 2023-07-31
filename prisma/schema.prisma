@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model User {
+  id            String       @id @default(uuid())
+  name          String
+  email         String       @unique
+  password_hash String
+  role          Role         @default(MEMBER)
+  created_at    DateTime     @default(now())
+  EnergyBill    EnergyBill[]
+
+  @@map("users")
+}
+
+model EnergyBill {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+
+  customer_number     String
+  installation_number String
+  reference_month     String
+  invoice_number      String  @unique
+  invoice_total       Decimal
+  due_date            String
+  due_date_iso        String
+
+  energy_unit       String
+  energy_amount     Decimal
+  energy_price      Decimal
+  total_energy_cost Decimal
+
+  injected_energy_unit       String
+  injected_energy_amount     Decimal
+  injected_energy_price      Decimal
+  total_injected_energy_cost Decimal
+
+  compensated_energy_unit       String
+  compensated_energy_amount     Decimal
+  compensated_energy_price      Decimal
+  total_compensated_energy_cost Decimal
+
+  contribution_public_lighting Decimal
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  @@map("energy_bill")
+}
